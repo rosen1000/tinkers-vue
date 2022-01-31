@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <img draggable="false" alt="Vue logo" src="./assets/logo.png" />
+  <img draggable="false" alt="Vue logo" src="./assets/logo.png" />
+  <div style="display: flex">
     <Container
       group-name="items"
       @drop="onDrop"
@@ -32,18 +32,19 @@
       </Draggable>
     </Container>
 
-    <item-container></item-container>
+    <button @click="btnClick">click me</button>
 
+    <!-- <item-container></item-container> -->
   </div>
 </template>
 
 <script>
-import Item from "@/components/Item";
+import Item from '@/components/Item';
 import ItemContainer from '@/components/ItemContainer';
-import { Container, Draggable } from "vue3-smooth-dnd";
+import { Container, Draggable } from 'vue3-smooth-dnd';
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
     Item,
     ItemContainer,
@@ -55,24 +56,24 @@ export default {
       items: [
         {
           id: 1,
-          data: "wood",
-          part: "tool_handle",
+          data: 'wood',
+          part: 'tool_handle',
         },
         {
           id: 2,
-          data: "stone",
-          part: "tool_binding",
+          data: 'stone',
+          part: 'tool_binding',
         },
         {
           id: 3,
-          data: "bone",
-          part: "small_blade",
+          data: 'bone',
+          part: 'small_blade',
         },
       ],
       items2: [],
       options: {
-        className: "drop-preview",
-        animationDuration: "150",
+        className: 'drop-preview',
+        animationDuration: '150',
         showOnTop: true,
       },
     };
@@ -87,11 +88,14 @@ export default {
       // console.log(dropResult);
     },
     replaceOnDrop({ payload }) {
-      this.items2 = [payload]
+      this.items2 = [payload];
     },
     getPayload(index) {
       return this.items[index];
     },
+    btnClick() {
+      fetch('http://127.0.0.1:8080/new-tool', {method: 'POST', body: JSON.stringify({type: "asd", "parts": [{"material": "wood"}]})})
+    }
   },
 };
 </script>
