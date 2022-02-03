@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { getImageSrc } from '@/utils/utils.js';
+import { getImageSrc } from '@/utils';
 
 export default {
   props: {
