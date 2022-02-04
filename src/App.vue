@@ -1,14 +1,20 @@
 <template>
   <div id="nav">
     <router-link to="/">Home</router-link> | <router-link to="/about">About</router-link> |
-    <router-link to="/builder">Builder</router-link> | <router-link to="/register">Register</router-link> |
-    <router-link to="/login">Login</router-link>
+    <router-link to="/builder">Builder</router-link> |
+    <template v-if="logged">
+      <router-link to="/register">Register</router-link> | <router-link to="/login">Login</router-link>
+    </template>
+    <template v-else>
+      <router-link to="/account">Account</router-link>
+    </template>
   </div>
   <router-view />
 </template>
 
 <script>
 import { defineComponent } from 'vue';
+import { getToken } from './utils';
 import axios from 'axios';
 
 axios.interceptors.request.use((config) => {
@@ -21,9 +27,14 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
-export default defineComponent({});
+export default defineComponent({
+  computed: {
+    logged() {
+      return getToken() == null;
+    },
+  },
+});
 </script>
-
 
 <style lang="scss">
 #app {
@@ -45,5 +56,9 @@ export default defineComponent({});
       color: #42b983;
     }
   }
+}
+
+.dark {
+  background: #444;
 }
 </style>

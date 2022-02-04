@@ -8,6 +8,7 @@ const routes = [
   { path: '/builder', component: Builder },
   { path: '/register', component: () => import('../views/AccountRegister.vue') },
   { path: '/login', component: () => import('../views/AccountLogin.vue') },
+  { path: '/account', component: () => import('../views/Account.vue')}
 ];
 
 const router = createRouter({

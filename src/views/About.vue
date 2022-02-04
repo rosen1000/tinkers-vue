@@ -7,13 +7,13 @@
 
 <script>
 import { getToken } from '../utils';
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   methods: {
     send() {
       console.log(getToken());
-    }
-  }
-})
+    },
+  },
+});
 </script>

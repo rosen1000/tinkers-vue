@@ -10,7 +10,7 @@
       <label for="password">Password</label>
       <input id="password" type="password" v-model="password" />
       <span class="error">{{ pwError }}</span>
-      <span class="warning">{{ pwWarning }}</span>
+      <span v-if="!pwError" :class="pwWarning" class="warning">{{ formatStrength(pwWarning) }}</span>
     </div>
     <div class="field">
       <button type="submit">Register!</button>
@@ -50,6 +50,12 @@ export default defineComponent({
         localStorage.setItem('token', data);
         window.location = '/';
       });
+    },
+    formatStrength(text) {
+      let array = text.replace(/([a-z])([A-Z])/g, '$1 $2').split(' ');
+      text = array[0].charAt(0).toUpperCase() + array[0].slice(1);
+      text += ' ' + array.splice(1).join(' ');
+      return text;
     },
   },
   computed: {
@@ -108,6 +114,30 @@ export default defineComponent({
 
 .warning {
   color: orange;
-  margin: 4px 0 0;
+  margin: 0;
+}
+
+.veryWeak {
+  color: rgb(255, 0, 0);
+}
+
+.weak {
+  color: rgb(255, 115, 0);
+}
+
+.medium {
+  color: rgb(255, 210, 0);
+}
+
+.strong {
+  color: rgb(135, 207, 75);
+}
+
+.veryStrong {
+  color: rgb(68, 150, 13);
+}
+
+.perfect {
+  color: rgb(0, 128, 0);
 }
 </style>
