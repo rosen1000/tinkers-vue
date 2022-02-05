@@ -1,38 +1,50 @@
 <template>
   <img draggable="false" alt="Vue logo" src="../assets/logo.png" />
-  <div style="display: flex">
-    <Container
-      group-name="items"
-      @drop="onDrop"
-      drag-class="drag-ghost"
-      drop-class="drag-ghost-drop"
-      :drop-placeholder="options"
-      behaviour="copy"
-      :get-child-payload="getPayload"
-    >
-      <Draggable v-for="item in items" :key="item.id">
-        <div class="draggable-item">
-          <Item :material="item.data" :part="item.part"></Item>
-        </div>
-      </Draggable>
-    </Container>
+  <div class="view">
+    <div>
+      <h4>Resources</h4>
+      <Container group-name="items" behaviour="copy" :get-child-payload="getPayload">
+        <Draggable v-for="item in items" :key="item.id">
+          <div class="draggable-item">
+            <Item :material="item.data" :part="item.part"></Item>
+          </div>
+        </Draggable>
+      </Container>
+    </div>
 
-    <Container
-      group-name="items"
-      @drop="replaceOnDrop"
-      drag-class="drag-ghost"
-      drop-class="drag-ghost-drop"
-      :drop-placeholder="options"
-      behaviour="drop-zone"
-    >
-      <Draggable v-if="items2.length == 1">
-        <div class="draggable-item">
-          <Item :material="items2[0].data" :part="items2[0].part" />
-        </div>
-      </Draggable>
-    </Container>
+    <div>
+      <h4>Tool type</h4>
+      <select name="type" v-model="toolType">
+        <template v-for="type of toolTypes" :key="type">
+          <option :value="type">{{ formatString(type) }}</option>
+        </template>
+      </select>
+    </div>
 
-    <button @click="btnClick">click me</button>
+    <div>
+      <h4>Parts</h4>
+      <template v-if="toolType">
+        {{toolType}}
+        <template v-for="type of partsData.toolTypes[toolType].parts" :key="type">
+          <Container group-name="items" @drop="replaceOnDrop($event, type)" behaviour="drop-zone">
+            <span>{{ formatString(type) }}</span>
+            <Draggable>
+              <div class="draggable-item">
+                <Item :toolType="toolType" :material="parts[type].data" :part="type" />
+              </div>
+            </Draggable>
+          </Container>
+
+          {{type}}
+          {{parts[type]?.data}}
+        </template>
+      </template>
+      <template v-else>
+        Select tool type
+      </template>
+    </div>
+
+    <!-- <button @click="btnClick">click me</button> -->
 
     <!-- <item-container></item-container> -->
   </div>
@@ -42,6 +54,7 @@
 import Item from '@/components/Item';
 import ItemContainer from '@/components/ItemContainer';
 import { Container, Draggable } from 'vue3-smooth-dnd';
+import { getPartsData } from '../utils';
 
 export default {
   name: 'Builder',
@@ -70,12 +83,10 @@ export default {
           part: 'small_blade',
         },
       ],
-      items2: [],
-      options: {
-        className: 'drop-preview',
-        animationDuration: '150',
-        showOnTop: true,
-      },
+      parts: {},
+      types: ['small_blade', 'tool_handle', 'tool_binding'],
+      toolType: '',
+      partsData: getPartsData(),
     };
   },
   methods: {
@@ -87,8 +98,9 @@ export default {
       this.items.splice(addedIndex, 0, temp);
       // console.log(dropResult);
     },
-    replaceOnDrop({ payload }) {
-      this.items2 = [payload];
+    replaceOnDrop({ addedIndex, payload }, type) {
+      if (addedIndex == null) return;
+      this.parts[type] = payload;
     },
     getPayload(index) {
       return this.items[index];
@@ -99,11 +111,29 @@ export default {
         body: JSON.stringify({ type: 'asd', parts: [{ material: 'wood' }] }),
       });
     },
+    formatString(text) {
+      return (text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()).split('_').join(' ');
+    },
   },
+  computed: {
+    toolTypes() {
+      return Object.keys(this.partsData.toolTypes);
+    },
+  },
+  watch: {
+    toolType() {
+      this.parts = {}
+    }
+  }
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+.view {
+  display: flex;
+  justify-content: space-evenly;
+}
+
 .item {
   height: 20px;
   background: red;
@@ -117,16 +147,19 @@ export default {
   text-align: center;
   vertical-align: center;
 }
+
 .draggable-item span {
   height: 100%;
 }
+
 .smooth-dnd-container {
   background: #b44;
   width: 165px;
-  min-height: 200px;
+  min-height: 64px;
   display: block;
-  margin: auto;
+  margin: 4px 0;
 }
+
 .smooth-dnd-drop-preview-default-class {
   border: none;
 }

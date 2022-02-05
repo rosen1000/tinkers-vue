@@ -1,0 +1,34 @@
+{
+  "head": {
+    "wood": { "durability": 60, "mining_level": "WOOD", "mining_speed": 2, "attack_damage": 0 },
+    "stone": { "durability": 130, "mining_level": "STONE", "mining_speed": 4, "attack_damage": 1 },
+    "flint": { "durability": 85, "mining_level": "STONE", "mining_speed": 3.5, "attack_damage": 1.25 },
+    "bone": { "durability": 100, "mining_level": "STONE", "mining_speed": 2.5, "attack_damage": 1.25 }
+  },
+  "handle": {
+    "wood": { "durability": 1, "attack_damage": 1, "attack_speed": 1, "mining_speed": 1 },
+    "stone": { "durability": 0.8, "attack_damage": 1, "attack_speed": 1, "mining_speed": 1.1 },
+    "flint": { "durability": 0.8, "attack_damage": 1.1, "attack_speed": 1, "mining_speed": 1 },
+    "bone": { "durability": 0.75, "attack_damage": 1, "attack_speed": 1.1, "mining_speed": 1 }
+  },
+  "extra": {
+    "wood": { "trait": "cultivated" },
+    "stone": { "trait": "stonebound" },
+    "flint": { "trait": "jagged" },
+    "bone": { "trait": "piercing" }
+  },
+  "toolTypes": {
+    "sword": { "parts": ["small_blade", "tool_handle", "tool_handle"], "broad": false },
+    "dagger": { "parts": ["small_blade", "tool_handle"], "broad": false },
+    "hand_axe": { "parts": ["small_axe_head", "tool_handle", "tool_binding"], "broad": false },
+    "kama": { "parts": ["small_blade", "tool_handle", "tool_binding"], "broad": false },
+    "mattock": { "parts": ["small_axe_head", "tool_handle", "pickaxe_head"], "broad": false },
+    "pickaxe": { "parts": ["pickaxe_head", "tool_handle", "tool_binding"], "broad": false },
+    "cleaver": { "parts": ["broad_blade", "tough_handle", "tough_handle", "large_plate"], "broad": true },
+    "broad_axe": { "parts": ["broad_axe_head", "tough_handle", "pickaxe_head", "tool_binding"], "broad": true },
+    "scythe": { "parts": ["broad_blade", "tough_handle", "tool_binding", "tough_handle"], "broad": true },
+    "excavator": { "parts": ["large_plate", "tough_handle", "large_plate", "tough_handle"], "broad": true },
+    "sledge_hammer": { "parts": ["hammer_head", "tough_handle", "large_plate", "large_plate"], "broad": true },
+    "vein_hammer": { "parts": ["hammer_head", "tough_handle", "pickaxe_head", "large_plate"], "broad": true }
+  }
+}

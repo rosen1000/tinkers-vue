@@ -23,4 +23,12 @@ const getToken = () => {
   return jwt.decode(token);
 }
 
-module.exports = { getImageSrc, getApi, getToken };
+/**
+ * Get parts data
+ * @returns {Parts}
+ */
+const getPartsData = () => {
+  return require('../assets/parts.json');
+}
+
+module.exports = { getImageSrc, getApi, getToken, getPartsData };
