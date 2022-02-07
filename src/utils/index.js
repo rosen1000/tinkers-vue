@@ -31,4 +31,11 @@ const getPartsData = () => {
   return require('../assets/parts.json');
 }
 
-module.exports = { getImageSrc, getApi, getToken, getPartsData };
+const getToolLength = (toolType) => {
+  switch (toolType) {
+    case 'sword':
+      return 3;
+  }
+}
+
+module.exports = { getImageSrc, getApi, getToken, getPartsData, getToolLength };

@@ -13,18 +13,8 @@
     </div>
 
     <div>
-      <h4>Tool type</h4>
-      <select name="type" v-model="toolType">
-        <template v-for="type of toolTypes" :key="type">
-          <option :value="type">{{ formatString(type) }}</option>
-        </template>
-      </select>
-    </div>
-
-    <div>
       <h4>Parts</h4>
       <template v-if="toolType">
-        {{toolType}}
         <template v-for="type of partsData.toolTypes[toolType].parts" :key="type">
           <Container group-name="items" @drop="replaceOnDrop($event, type)" behaviour="drop-zone">
             <span>{{ formatString(type) }}</span>
@@ -34,14 +24,25 @@
               </div>
             </Draggable>
           </Container>
-
-          {{type}}
-          {{parts[type]?.data}}
         </template>
       </template>
-      <template v-else>
-        Select tool type
+      <template v-else> Select tool type </template>
+    </div>
+
+    <div>
+      <h4>Stats</h4>
+      <template v-if="true">
+        <item-stats v-model:json="json"></item-stats>
       </template>
+    </div>
+
+    <div>
+      <h4>Tool type</h4>
+      <select name="type" v-model="toolType">
+        <template v-for="type of toolTypes" :key="type">
+          <option :value="type">{{ formatString(type) }}</option>
+        </template>
+      </select>
     </div>
 
     <!-- <button @click="btnClick">click me</button> -->
@@ -52,14 +53,16 @@
 
 <script>
 import Item from '@/components/Item';
+import ItemStats from '@/components/ItemStats';
 import ItemContainer from '@/components/ItemContainer';
 import { Container, Draggable } from 'vue3-smooth-dnd';
-import { getPartsData } from '../utils';
+import { getPartsData, getToolLength } from '../utils';
 
 export default {
   name: 'Builder',
   components: {
     Item,
+    ItemStats,
     ItemContainer,
     Container,
     Draggable,
@@ -85,7 +88,7 @@ export default {
       ],
       parts: {},
       types: ['small_blade', 'tool_handle', 'tool_binding'],
-      toolType: '',
+      toolType: 'sword',
       partsData: getPartsData(),
     };
   },
@@ -119,12 +122,19 @@ export default {
     toolTypes() {
       return Object.keys(this.partsData.toolTypes);
     },
+    json() {
+      let tool = {};
+      tool.type = this.toolType;
+      tool.parts = JSON.parse(JSON.stringify(this.parts));
+      tool.completed = Object.keys(tool.parts).length == getToolLength(this.toolType);
+      return tool;
+    },
   },
   watch: {
     toolType() {
-      this.parts = {}
-    }
-  }
+      this.parts = {};
+    },
+  },
 };
 </script>
 

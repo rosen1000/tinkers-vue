@@ -15,14 +15,17 @@ export default {
     // TODO: now i have to implement custom logic for most if not all tools for the fetching system
 
     url() {
+      // same part patch
+      let part = this.part.split(/_\d$/)[0];
+
       try {
         let images = require.context('@/assets/textures/parts');
-        let url = images(`./${this.part}_tconstruct_${this.material}.png`);
+        let url = images(`./${part}_tconstruct_${this.material}.png`);
         return url;
       } catch (e) {
         try {
-          console.log(`../assets/textures/${this.toolType}/${this.part.split('_').pop()}_tconstruct_${this.material}.png`);
-          let images = require(`../assets/textures/${this.toolType}/${this.part.split('_').pop()}_tconstruct_${this.material}.png`);
+          console.log(`../assets/textures/${this.toolType}/${part.split('_').pop()}_tconstruct_${this.material}.png`);
+          let images = require(`../assets/textures/${this.toolType}/${part.split('_').pop()}_tconstruct_${this.material}.png`);
           console.log(images);
           return images;
         } catch (e) {

@@ -1,4 +1,4 @@
-type MINING_LEVEL = 'WOOD' | 'STONE' | 'IRON' | 'DIAMOND' | 'COBALD';
+type MINING_LEVEL = 'WOOD' | 'STONE' | 'IRON' | 'DIAMOND' | 'NETHERITE';
 
 interface Parts {
   head: {
