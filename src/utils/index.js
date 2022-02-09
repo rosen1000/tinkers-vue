@@ -1,9 +1,7 @@
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 
 function getImageSrc(toolType, part, material) {
-  return require.context('@/assets/textures')(
-    `./${toolType}/${part}_tconstruct_${material}.png`
-  );
+  return require.context('@/assets/textures')(`./${toolType}/${part}_tconstruct_${material}.png`);
 }
 
 /**
@@ -21,7 +19,7 @@ const getApi = (path) => `http://127.0.0.1:8081/${path}`;
 const getToken = () => {
   let token = localStorage.getItem('token');
   return jwt.decode(token);
-}
+};
 
 /**
  * Get parts data
@@ -29,13 +27,22 @@ const getToken = () => {
  */
 const getPartsData = () => {
   return require('../assets/parts.json');
-}
+};
 
 const getToolLength = (toolType) => {
   switch (toolType) {
     case 'sword':
       return 3;
   }
-}
+};
 
-module.exports = { getImageSrc, getApi, getToken, getPartsData, getToolLength };
+const partToType = (part) => {
+  switch (part) {
+    case 'small_blade':
+      return 'head';
+    case 'tool_handle':
+      return 'handle';
+  }
+};
+
+module.exports = { getImageSrc, getApi, getToken, getPartsData, getToolLength, partToType };

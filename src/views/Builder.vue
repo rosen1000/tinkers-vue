@@ -1,5 +1,5 @@
 <template>
-  <img draggable="false" alt="Vue logo" src="../assets/logo.png" />
+  <!-- <img draggable="false" alt="Vue logo" src="../assets/logo.png" /> -->
   <div class="view">
     <div>
       <h4>Resources</h4>
@@ -31,14 +31,18 @@
 
     <div>
       <h4>Stats</h4>
-      <template v-if="true">
-        <item-stats v-model:json="json"></item-stats>
-      </template>
+      <!-- <span> -->
+      <item-stats v-model:json="json" v-show="json.completed"></item-stats>
+      <span v-show="!json.completed">
+        Select parts to<br />
+        show stats
+      </span>
+      <!-- </span> -->
     </div>
 
     <div>
       <h4>Tool type</h4>
-      <select name="type" v-model="toolType">
+      <select class="selectToolType" name="type" v-model="toolType">
         <template v-for="type of toolTypes" :key="type">
           <option :value="type">{{ formatString(type) }}</option>
         </template>
@@ -49,6 +53,8 @@
 
     <!-- <item-container></item-container> -->
   </div>
+
+  <small class="disclaimer">* Calculations are not guaranteed to be correct</small>
 </template>
 
 <script>
@@ -96,7 +102,7 @@ export default {
     onDrop({ removedIndex, addedIndex, payload }) {
       let temp = this.items[removedIndex];
       // this.items.forEach(console.log)
-      console.log(removedIndex, addedIndex, payload);
+      // console.log(removedIndex, addedIndex, payload);
       this.items.splice(removedIndex, 1);
       this.items.splice(addedIndex, 0, temp);
       // console.log(dropResult);
@@ -156,6 +162,8 @@ export default {
   background: #777;
   text-align: center;
   vertical-align: center;
+  margin: 0 auto;
+  border: solid black 2px;
 }
 
 .draggable-item span {
@@ -172,5 +180,15 @@ export default {
 
 .smooth-dnd-drop-preview-default-class {
   border: none;
+}
+
+.selectToolType {
+  font-family: 'Minecraft';
+  border: none;
+  padding: 2px;
+}
+
+.disclaimer {
+  color: #0004;
 }
 </style>
