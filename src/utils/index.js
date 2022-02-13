@@ -31,17 +31,40 @@ const getPartsData = () => {
 
 const getToolLength = (toolType) => {
   switch (toolType) {
+    case 'cleaver':
+    case 'excavator':
+    case 'vein_hammer':
+    case 'sledge_hammer':
+    case 'scythe':
+    case 'broad_axe':
+      return 4;
     case 'sword':
+    case 'kama':
+    case 'hand_axe':
+    case 'pickaxe':
+    case 'mattock':
       return 3;
+    case 'dagger':
+      return 2;
   }
 };
 
 const partToType = (part) => {
   switch (part) {
     case 'small_blade':
+    case 'pickaxe_head':
+    case 'wooden_hammer':
+    case 'small_axe_head':
+    case 'broad_axe_head':
+    case 'broad_blade':
+    case 'large_plate':
+    case 'hammer_head':
       return 'head';
     case 'tool_handle':
+    case 'tough_handle':
       return 'handle';
+    case 'tool_binding':
+      return 'extra';
   }
 };
 
