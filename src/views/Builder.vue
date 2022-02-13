@@ -2,7 +2,7 @@
   <!-- <img draggable="false" alt="Vue logo" src="../assets/logo.png" /> -->
   <div class="view">
     <div>
-      <h4>Resources</h4>
+      <h3>Resources</h3>
       <Container group-name="items" behaviour="copy" :get-child-payload="getPayload">
         <Draggable v-for="item in items" :key="item.id">
           <div class="draggable-item">
@@ -13,7 +13,7 @@
     </div>
 
     <div>
-      <h4>Parts</h4>
+      <h3>Parts</h3>
       <template v-if="toolType">
         <template v-for="type of partsData.toolTypes[toolType].parts" :key="type">
           <Container group-name="items" @drop="replaceOnDrop($event, type)" behaviour="drop-zone">
@@ -30,18 +30,16 @@
     </div>
 
     <div>
-      <h4>Stats</h4>
-      <!-- <span> -->
+      <h3>Built tool</h3>
       <item-stats v-model:json="json" v-show="json.completed"></item-stats>
       <span v-show="!json.completed">
         Select parts to<br />
         show stats
       </span>
-      <!-- </span> -->
     </div>
 
     <div>
-      <h4>Tool type</h4>
+      <h3>Tool type</h3>
       <select class="selectToolType" name="type" v-model="toolType">
         <template v-for="type of toolTypes" :key="type">
           <option :value="type">{{ formatString(type) }}</option>
@@ -148,6 +146,7 @@ export default {
 .view {
   display: flex;
   justify-content: space-evenly;
+  margin: 0 0 64px;
 }
 
 .item {
@@ -166,6 +165,10 @@ export default {
   border: solid black 2px;
 }
 
+.smooth-dnd-draggable-wrapper + .smooth-dnd-draggable-wrapper {
+  margin-top: 4px;
+}
+
 .draggable-item span {
   height: 100%;
 }
@@ -176,6 +179,7 @@ export default {
   min-height: 64px;
   display: block;
   margin: 4px 0;
+  padding: 6px 0;
 }
 
 .smooth-dnd-drop-preview-default-class {

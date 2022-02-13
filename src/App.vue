@@ -42,13 +42,18 @@ export default defineComponent({
   src: local('Minecraft'), url('./fonts/MinecraftRegular-Bmg3.otf');
 }
 
+button {
+  font-family: 'Minecraft';
+}
+
 #app {
   font-family: 'Minecraft', Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin: 16px;
+  height: 100%;
+  margin: 64px;
   padding: 0 0 16px;
   background: #f7f7f7;
   box-shadow: 8px 0 0 0 #777,

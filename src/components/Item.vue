@@ -6,14 +6,7 @@
 <script>
 export default {
   props: ['toolType', 'material', 'part'],
-  mounted() {
-    // console.log(this.material, this.part);
-  },
   computed: {
-    // TODO: because most broad tools (mattock, vein hammer) require more than one of the same type of a part
-    // TODO: the second part is using differnt name (mattock: head => axe; head => pick)
-    // TODO: now i have to implement custom logic for most if not all tools for the fetching system
-
     url() {
       // same part patch
       let part = this.part.split(/_\d$/)[0];
@@ -22,18 +15,37 @@ export default {
         let images = require.context('@/assets/textures/parts');
         let url = images(`./${part}_tconstruct_${this.material}.png`);
         return url;
-      } catch (e) {
+      } catch (_) {
         try {
-          console.log(`../assets/textures/${this.toolType}/${part.split('_').pop()}_tconstruct_${this.material}.png`);
-          let images = require(`../assets/textures/${this.toolType}/${part.split('_').pop()}_tconstruct_${this.material}.png`);
-          console.log(images);
-          return images;
+          let fullPart = part;
+          part = part.split('_').pop();
+
+          if (
+            this.toolType == 'mattock' ||
+            this.toolType == 'broad_axe' ||
+            this.toolType == 'hand_axe' ||
+            this.toolType == 'scythe' ||
+            this.toolType == 'cleaver' ||
+            this.toolType == 'vein_hammer'
+          ) {
+            if (fullPart == 'small_axe_head')
+              return require(`../assets/textures/hand_axe/head_tconstruct_${this.material}.png`);
+            if (fullPart == 'pickaxe_head')
+              return require(`../assets/textures/pickaxe/head_tconstruct_${this.material}.png`);
+            if (fullPart == 'broad_axe_head')
+              return require(`../assets/textures/broad_axe/blade_tconstruct_${this.material}.png`);
+            if (fullPart == 'broad_blade')
+              return require(`../assets/textures/cleaver/head_tconstruct_${this.material}.png`);
+            if (fullPart == 'hammer_head')
+              return require(`../assets/textures/sledge_hammer/head_tconstruct_${this.material}.png`);
+          }
+
+          return require(`../assets/textures/${this.toolType}/${part}_tconstruct_${this.material}.png`);
         } catch (e) {
-          console.log(e);
+          console.error(e);
           return null;
         }
       }
-      // return `./assets/textures/pickaxe/binding_tconstruct_${this.material}.png`;
     },
   },
 };

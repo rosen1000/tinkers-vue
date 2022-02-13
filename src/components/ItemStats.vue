@@ -1,11 +1,17 @@
 <template>
   <div>
+    <strong>Stats:</strong>
     <span class="durability">Durability: {{ Math.floor(durability) }}</span>
     <span class="damage">Attack damage: {{ formatNumber(damage) }}</span>
     <span class="attackSpeed">Attack speed: {{ formatNumber(attackSpeed) }}</span>
-    <span class="miningSpeed">Mining speed: {{ formatNumber(miningSpeed) }} </span>
-    <span>Modifiers:</span>
-    <span v-for="(times, trait) in traitsComputed" :key="trait" :class="trait">{{ trait }} {{ toRoman(times) }}</span>
+    <!-- <span class="miningLevel">Mining level: {{ miningLevel }}</span> -->
+    <span class="miningSpeed">Mining speed: {{ formatNumber(miningSpeed) }}</span>
+    <div class="mods">
+      <strong>Modifiers:</strong>
+      <span v-for="(times, trait) in traitsComputed" :key="trait" :class="trait">
+        {{ formatString(trait) }} {{ toRoman(times) }}
+      </span>
+    </div>
   </div>
 </template>
 
@@ -22,6 +28,7 @@ export default {
       attackSpeed: 0,
       miningSpeed: 0,
       traits: [],
+      miningLevel: [],
     };
   },
   methods: {
@@ -31,6 +38,7 @@ export default {
       this.attackSpeed = 0;
       this.miningSpeed = 0;
       this.traits = [];
+      this.miningLevel = [];
     },
     formatString(text) {
       return (text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()).split('_').join(' ');
@@ -42,23 +50,7 @@ export default {
     formatNumber(number) {
       return parseFloat((Math.floor(number * 100) / 100).toFixed(2));
     },
-  },
-  computed: {
-    traitsComputed() {
-      /** @type {{[key: string]: number}} */
-      let out = {};
-      for (const trait of this.traits) {
-        if (out[trait]) {
-          out[trait] += 1;
-        } else {
-          out[trait] = 1;
-        }
-      }
-      return out;
-    },
-  },
-  watch: {
-    json() {
+    calculate() {
       if (!this.json.completed) return;
       this.reset();
 
@@ -74,6 +66,7 @@ export default {
           case 'head':
             head.push(this.partsData.head[data.data]);
             this.traits.push(this.partsData.extra[data.data].trait);
+            this.miningLevel.push(this.partsData.head[data.data].mining_level);
             break;
           case 'handle':
             handle.push(this.partsData.handle[data.data]);
@@ -81,10 +74,9 @@ export default {
             break;
           case 'extra':
             extra.push(this.partsData.extra[data.data]);
-            this.traits.push(this.partsData.extra[data.data].trait);
             break;
           default:
-            alert(`Failed reading part type on ${JSON.stringify(data)}`);
+            alert(`Failed reading part type on ${JSON.stringify(data)} ${type}`);
         }
       });
 
@@ -111,7 +103,7 @@ export default {
         handleData.attack_speed += data.attack_speed;
         handleData.mining_speed += data.mining_speed;
       });
-      console.log(handleData, this.durability, handleData.durability / handle.length, this.formatNumber(handleData.durability / handle.length));
+
       this.durability *= +this.formatNumber(handleData.durability / handle.length);
       this.damage *= +this.formatNumber(handleData.attack_damage / handle.length);
       this.miningSpeed *= +this.formatNumber(handleData.mining_speed / handle.length);
@@ -133,14 +125,108 @@ export default {
           this.attackSpeed = 1.6;
           this.miningSpeed /= 2;
           break;
+        case 'dagger':
+          this.miningSpeed *= 3 / 4;
+          this.damage *= 0.5;
+          this.damage += 1.5;
+          this.attackSpeed = 2.0;
+          this.durability *= 0.75;
+          this.traits.push('Padded');
+          break;
+        case 'hand_axe':
+          this.damage += 6;
+          this.attackSpeed = 0.9;
+          break;
+        case 'kama':
+          this.damage *= 0.75;
+          this.damage += 1;
+          this.attackSpeed = 1.8;
+          break;
+        case 'mattock':
+          this.damage *= 1.1;
+          this.damage += 2.1;
+          this.attackSpeed = 0.9;
+          this.miningSpeed *= 1.1;
+          this.durability *= 1.25;
+          break;
+        case 'pickaxe':
+          this.attackSpeed = 1.2;
+          this.traits.push('piercing');
+          break;
+        case 'cleaver':
+          this.damage *= 1.5;
+          this.damage += 5.5;
+          this.attackSpeed = 0.9;
+          this.durability *= 3.5;
+          this.miningSpeed *= 0.25;
+          this.traits.push('beheading');
+          this.traits.push('beheading');
+          break;
+        case 'broad_axe':
+          this.damage += 4.95;
+          this.damage *= 1.5;
+          this.attackSpeed = 0.6;
+          this.miningSpeed *= 0.3;
+          this.durability *= 3.85;
+          break;
+        case 'scythe':
+          // CHECKPOINT
+          this.damage += 1;
+          this.attackSpeed = 0.8;
+          this.miningSpeed *= 0.45;
+          this.durability *= 2.5;
+          break;
+        case 'excavator':
+          this.damage += 1.5;
+          this.damage *= 1.2;
+          this.attackSpeed = 1;
+          this.miningSpeed *= 0.3;
+          this.durability *= 3.75;
+          break;
+        case 'sledge_hammer':
+          this.damage += 3;
+          this.damage *= 1.35;
+          this.attackSpeed = 0.75;
+          this.miningSpeed *= 0.4;
+          this.durability *= 4;
+          break;
+        case 'vein_hammer':
+          this.damage += 3;
+          this.damage *= 1.25;
+          this.attackSpeed = 1.1;
+          this.miningSpeed *= 3;
+          this.durability *= 5;
       }
 
       // Relies on tool type
       this.attackSpeed *= +this.formatNumber(handleData.attack_speed / handle.length);
     },
+  },
+  computed: {
+    traitsComputed() {
+      /** @type {{[key: string]: number}} */
+      let out = {};
+      for (const trait of this.traits) {
+        if (out[trait]) {
+          out[trait] += 1;
+        } else {
+          out[trait] = 1;
+        }
+      }
+      return out;
+    },
+  },
+  watch: {
+    json() {
+      this.calculate();
+    },
     traits() {
       this.traits = this.traits.sort();
     },
+  },
+  mounted() {
+    console.log();
+    this.calculate();
   },
 };
 </script>
@@ -160,6 +246,10 @@ span {
 
 .attackSpeed {
   color: #8547cc;
+}
+
+.mods {
+  margin: 4px 0 0 0;
 }
 
 [class^='damage'] {
