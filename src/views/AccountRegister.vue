@@ -43,7 +43,7 @@ export default defineComponent({
       if (this.unError) return;
       if (this.pwError) return;
 
-      axios.put(getApi('register'), { username: this.username, password: this.password }).then((response) => {
+      axios.post(getApi('register'), { username: this.username, password: this.password }).then((response) => {
         let data = response.data;
         if (data.error) return (this.error = data.error);
 
