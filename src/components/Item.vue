@@ -1,6 +1,5 @@
 <template>
   <img draggable="false" :src="url" :alt="`${material}_${part}`" />
-  <!-- {{url}} -->
 </template>
 
 <script>

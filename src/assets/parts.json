@@ -12,7 +12,7 @@
     "slimewood": { "durability": 375, "mining_level": "IRON", "mining_speed": 4, "attack_damage": 1 },
     "scorched_stone": { "durability": 120, "mining_level": "IRON", "mining_speed": 4.5, "attack_damage": 2.5 },
     "slimesteel": { "durability": 1040, "mining_level": "DIAMOND", "mining_speed": 6, "attack_damage": 2.5 },
-    "tinlers_bronze": { "durability": 720, "mining_level": "DIAMOND", "mining_speed": 7, "attack_damage": 2 },
+    "tinkers_bronze": { "durability": 720, "mining_level": "DIAMOND", "mining_speed": 7, "attack_damage": 2 },
     "nahuatl": { "durability": 350, "mining_level": "DIAMOND", "mining_speed": 4.5, "attack_damage": 3 },
     "pig_iron": { "durability": 580, "mining_level": "DIAMOND", "mining_speed": 6, "attack_damage": 2.5 },
     "rose_gold": { "durability": 175, "mining_level": "IRON", "mining_speed": 10, "attack_damage": 1 },

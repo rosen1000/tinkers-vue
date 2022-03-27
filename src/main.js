@@ -7,4 +7,4 @@ const app = createApp(App);
 app.use(router);
 app.mount('#app');
 
-Sentry.init({ app });
+// Sentry.init({ app });

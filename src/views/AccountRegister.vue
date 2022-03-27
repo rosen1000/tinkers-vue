@@ -1,5 +1,5 @@
 <template>
-  <form @submit="submit">
+  <form @submit.prevent="submit">
     <h1>Register</h1>
     <div class="field">
       <label for="username">Username</label>
@@ -37,9 +37,7 @@ export default defineComponent({
     };
   },
   methods: {
-    submit(e) {
-      e.preventDefault();
-
+    submit() {
       if (this.unError) return;
       if (this.pwError) return;
 
@@ -48,7 +46,7 @@ export default defineComponent({
         if (data.error) return (this.error = data.error);
 
         localStorage.setItem('token', data);
-        window.location = '/';
+        this.$router.push('/');
       });
     },
     formatStrength(text) {

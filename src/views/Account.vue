@@ -1,5 +1,8 @@
 <template>
   <h1>Welcome {{ token.sub }}</h1>
+  <div class="item-container">
+    <!-- TODO: rendered item -->
+  </div>
   <button @click="logout">Logout</button>
 </template>
 

@@ -1,8 +1,63 @@
 const jwt = require('jsonwebtoken');
 
 function getImageSrc(toolType, part, material) {
-  return require.context('@/assets/textures')(`./${toolType}/${part}_tconstruct_${material}.png`);
+  let fullPart = part.split('_')[1];
+  let numberedPart = +part.split('_').pop();
+
+  try {
+    if (!isNaN(numberedPart) && !isBroad(toolType)) {
+      if (numberedPart == 1) return require(`../assets/textures/sword/guard_tconstruct_${material}.png`);
+      else return require(`../assets/textures/sword/handle_tconstruct_${material}.png`);
+    }
+
+    if (toolType == 'mattock' && fullPart == 'axe')
+      return require(`../assets/textures/mattock/axe_tconstruct_${material}.png`);
+    if (toolType == 'mattock' && fullPart == 'head')
+      return require(`../assets/textures/mattock/pick_tconstruct_${material}.png`);
+    if (toolType == 'dagger' && fullPart == 'handle')
+      return require(`../assets/textures/dagger/crossguard_tconstruct_${material}.png`);
+
+    if (toolType == 'kama' && fullPart == 'blade') fullPart = 'head';
+
+    if (!isBroad(toolType)) {
+      if (toolType != 'mattock' && ['axe', 'pick'].includes(fullPart)) fullPart = 'head';
+      if (fullPart == 'handle') toolType = 'pickaxe';
+    }
+
+    if (isBroad(toolType)) {
+      if (fullPart == 'blade') fullPart = 'head';
+      if (part.startsWith('tough')) fullPart = 'handle';
+      if (fullPart == 'plate' && toolType == 'cleaver') fullPart = 'shield';
+      if (fullPart == 'axe') fullPart = 'blade';
+      if (toolType == 'broad_axe' && fullPart == 'head') fullPart = 'back';
+
+      if (!isNaN(numberedPart)) {
+        if (numberedPart == 1) {
+          if (fullPart == 'handle' && toolType == 'cleaver') fullPart = 'guard';
+          if (fullPart == 'handle' && toolType == 'scythe') fullPart = 'accessory';
+          if (fullPart == 'plate' && toolType == 'excavator') fullPart = 'head';
+          if (fullPart == 'handle' && toolType == 'excavator') fullPart = 'grip';
+          if (fullPart == 'plate') fullPart = 'front';
+        } else {
+          if (fullPart == 'guard') fullPart = 'handle';
+          if (fullPart == 'plate' && toolType == 'excavator') fullPart = 'binding';
+          if (fullPart == 'plate') fullPart = 'back';
+        }
+      }
+
+      if (part == 'pickaxe_head' && toolType == 'vein_hammer') fullPart = 'back';
+      if (fullPart == 'plate' && toolType == 'vein_hammer') fullPart = 'front';
+    }
+
+    return require(`../assets/textures/${toolType}/${fullPart}_tconstruct_${material}.png`);
+  } catch (e) {
+    console.error(e.message);
+  }
 }
+
+const isBroad = (item) => {
+  return ['cleaver', 'broad_axe', 'scythe', 'excavator', 'sledge_hammer', 'vein_hammer'].includes(item);
+};
 
 /**
  * Returns full query string
