@@ -1,6 +1,6 @@
 <template>
   <div class="view">
-    <div>
+    <div class="border column">
       <h3>Resources</h3>
       <Container style="" class="resources-zone" group-name="items" behaviour="copy" :get-child-payload="getPayload">
         <Draggable v-for="item in items" :key="item.id">
@@ -12,13 +12,13 @@
       </Container>
     </div>
 
-    <div>
+    <div class="border parts column">
       <h3>Parts</h3>
       <template v-if="toolType">
         <template v-for="type of partsData.toolTypes[toolType].parts" :key="type">
           <Container class="parts-zone" group-name="items" @drop="replaceOnDrop($event, type)" behaviour="drop-zone">
             <span>{{ formatString(type) }}</span>
-            <Draggable>
+            <Draggable v-if="parts[type]">
               <span class="item-name">{{ formatString(parts[type].data) }}</span>
               <div class="draggable-item">
                 <Item :toolType="toolType" :material="parts[type].data" :part="type" />
@@ -26,38 +26,54 @@
             </Draggable>
           </Container>
         </template>
-        <button>clear</button>
+        <button @click="parts = {}">clear</button>
       </template>
       <template v-else> Select tool type </template>
     </div>
 
-    <div>
+    <div class="border column">
       <h3>Built tool</h3>
-      <select class="selectToolType" name="type" v-model="toolType">
+      <select class="select-tool-type" name="type" v-model="toolType">
         <template v-for="type of toolTypes" :key="type">
           <option :value="type">{{ formatString(type) }}</option>
         </template>
       </select>
-      <item-stats style="margin: 8px 0;" v-model:json="json" v-show="json.completed"></item-stats>
+      <item-stats style="margin: 8px 0" v-model:json="json" v-show="json.completed"></item-stats>
       <span v-show="!json.completed">
-        <span style="display: block;">Select parts <br> to show stats</span>
+        <span style="display: block"
+          >Select parts <br />
+          to show stats</span
+        >
       </span>
       <item-render :toolType="toolType" :renderData="renderData" />
     </div>
-
   </div>
   <div class="footer">
-    <button class="save" @click="save">save</button>
+    <button class="save" @click="showModalFn">save</button>
     <span>{{ message }}</span>
     <span class="error">{{ error }}</span>
     <small class="disclaimer">* Calculations are not guaranteed to be correct</small>
   </div>
+  <modal v-if="showModal">
+    <h2>Save current tool</h2>
+    <div style="display: grid; margin: 8px 0">
+      <label for="tool-name">Name</label>
+      <input autocomplete="false" name="tool-name" id="tool-name" type="text" v-model="toolName" />
+    </div>
+    <label for="tool-description">Description</label>
+    <textarea name="description" id="tool-description" cols="30" rows="10" v-model="toolDescription"></textarea>
+    <div class="button-array">
+      <button @click="showModal = false">Cancel</button>
+      <button @click="save">Save</button>
+    </div>
+  </modal>
 </template>
 
 <script>
 import Item from '@/components/Item';
 import ItemStats from '@/components/ItemStats';
 import ItemRender from '@/components/ItemRender';
+import Modal from '@/components/Modal';
 import { Container, Draggable } from 'vue3-smooth-dnd';
 import { getApi, getPartsData, getToolLength } from '../utils';
 import axios from 'axios';
@@ -68,6 +84,7 @@ export default {
     Item,
     ItemStats,
     ItemRender,
+    Modal,
     Container,
     Draggable,
   },
@@ -79,16 +96,18 @@ export default {
 
     return {
       items,
-      parts: {},
-      // types: ['small_blade', 'tool_handle', 'tool_binding'],
-      toolType: 'sword',
       partsData,
+      parts: {},
+      toolType: 'sword',
       error: '',
       message: '',
+      showModal: false,
+      toolName: '',
+      toolDescription: '',
     };
   },
   methods: {
-    onDrop({ removedIndex, addedIndex, payload }) {
+    onDrop({ removedIndex, addedIndex }) {
       let temp = this.items[removedIndex];
       this.items.splice(removedIndex, 1);
       this.items.splice(addedIndex, 0, temp);
@@ -106,12 +125,22 @@ export default {
     formatString(text) {
       return (text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()).split('_').join(' ');
     },
+    showModalFn() {
+      if (!this.json.completed) return (this.error = 'Build the whole tool');
+      this.error = '';
+      this.showModal = true;
+    },
     async save() {
-      let response = await axios.post(getApi('tool'), { ...this.json });
+      let response = await axios.post(getApi('tool'), {
+        ...this.json,
+        name: this.toolName,
+        description: this.toolDescription,
+      });
       if (response.status == 401) this.error = '401 Unauthorized';
       if (response.data.error) this.error = response.data.error;
       this.error = '';
       this.message = response.data.message;
+      this.showModal = false;
     },
   },
   computed: {
@@ -138,9 +167,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#tool-description,
+#tool-name {
+  display: block;
+  resize: none;
+  // font-size: 1.4em;
+  font-family: 'Minecraft', Avenir, Helvetica, Arial, sans-serif;
+}
+
+.column {
+  background: #f0f0f0;
+  margin: 16px 0 0;
+  padding: 0 8px;
+}
+
+.parts {
+  padding: 0 16px 8px;
+}
+
+.button-array {
+  display: flex;
+  margin: 16px 0 -8px;
+  justify-content: space-evenly;
+}
+
 .view {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
   margin: 0 0 32px;
 }
 
@@ -159,6 +212,14 @@ export default {
   margin: 0 auto;
   border: solid black 2px;
 }
+
+// .smooth-dnd-container {
+//     box-shadow: 8px 0 0 0 #777, 0 8px 0 0 #777, 4px 4px 0 0 #777, -8px 0 0 0 #e8e8e8, 0 -8px 0 0 #e8e8e8,
+//     -4px -4px 0 0 #e8e8e8, 0 0 0 4px #b5b4b5, 4px 8px 0 0 #555, 8px 4px 0 0 #555, -4px -8px 0 0 #e8e8e8,
+//     -8px -4px 0 0 #e8e8e8, 8px -4px 0 0 #000, 4px -8px 0 0 #000, -8px 4px 0 0 #000, -4px 8px 0 0 #000,
+//     -8px -8px 0 0 #000, 8px 8px 0 0 #000, -12px 0 0 0 #000, -12px -4px 0 0 #000, 12px 0 0 0 #000, 12px 4px 0 0 #000,
+//     0 -12px 0 0 #000, -4px -12px 0 0 #000, 0 12px 0 0 #000, 4px 12px 0 0 #000;
+// }
 
 .smooth-dnd-draggable-wrapper {
   color: black;
@@ -179,7 +240,7 @@ export default {
   // justify-content: center;
   flex-wrap: wrap;
   align-items: flex-end;
-  background: #42b983;
+  // background: #42b983;
   // width: 540px;
   min-height: 64px;
   max-width: 540px;
@@ -193,12 +254,12 @@ export default {
 }
 
 .parts-zone {
-  background: #42b983;
+  // background: #42b983;
   color: black;
   width: 128px;
   min-height: 87px;
   display: block;
-  margin: 4px 0;
+  margin: 20px 0;
   padding: 6px 0;
 }
 
@@ -206,10 +267,14 @@ export default {
   border: none;
 }
 
-.selectToolType {
+.select-tool-type {
   font-family: 'Minecraft';
   border: none;
   padding: 2px;
+}
+
+.error {
+  color: red;
 }
 
 .disclaimer {

@@ -65,7 +65,15 @@ const isBroad = (item) => {
  * @param {String} path api path to backend
  * @returns query
  */
-const getApi = (path) => `http://127.0.0.1:8081/${path}`;
+const getApi = (path, params) => {
+  if (!params) return `http://127.0.0.1:8081/${path}`;
+  return (
+    `http://127.0.0.1:8081/${path}?` +
+    Object.entries(params)
+      .map((e) => e.join('='))
+      .join('&')
+  );
+};
 
 /**
  * Get JWT decoded token

@@ -8,7 +8,7 @@ const routes = [
   { path: '/register', component: () => import('../views/AccountRegister.vue') },
   { path: '/login', component: () => import('../views/AccountLogin.vue') },
   { path: '/account', component: () => import('../views/Account.vue') },
-  { path: '/album', component: () => import('../views/Album.vue') },
+  { path: '/gallery', component: () => import('../views/Gallery.vue') },
 ];
 
 const router = createRouter({
