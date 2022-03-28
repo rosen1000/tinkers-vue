@@ -62,21 +62,20 @@ button {
 
 #app {
   font-family: 'Minecraft', Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  // -webkit-font-smoothing: antialiased;
+  // -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: black;
   height: 100%;
   margin: 32px;
   padding: 0 0 16px;
-  // background: #f7f7f7;
-  background: rgb(165, 243, 248);
+  background: #f7f7f7;
+  // background: rgb(165, 243, 248);
   box-shadow: 8px 0 0 0 #777, 0 8px 0 0 #777, 4px 4px 0 0 #777, -8px 0 0 0 #e8e8e8, 0 -8px 0 0 #e8e8e8,
     -4px -4px 0 0 #e8e8e8, 0 0 0 4px #b5b4b5, 4px 8px 0 0 #555, 8px 4px 0 0 #555, -4px -8px 0 0 #e8e8e8,
     -8px -4px 0 0 #e8e8e8, 8px -4px 0 0 #000, 4px -8px 0 0 #000, -8px 4px 0 0 #000, -4px 8px 0 0 #000,
     -8px -8px 0 0 #000, 8px 8px 0 0 #000, -12px 0 0 0 #000, -12px -4px 0 0 #000, 12px 0 0 0 #000, 12px 4px 0 0 #000,
     0 -12px 0 0 #000, -4px -12px 0 0 #000, 0 12px 0 0 #000, 4px 12px 0 0 #000;
-    // min-height: 90vh;
 }
 
 #nav {

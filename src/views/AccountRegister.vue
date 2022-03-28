@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submit">
+  <form @submit.prevent="submit" class="border form">
     <h1>Register</h1>
     <div class="field">
       <label for="username">Username</label>
@@ -46,7 +46,7 @@ export default defineComponent({
         if (data.error) return (this.error = data.error);
 
         localStorage.setItem('token', data);
-        this.$router.push('/');
+        window.location = '/';
       });
     },
     formatStrength(text) {
@@ -85,23 +85,30 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.field {
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  justify-content: center;
+.form {
+  width: 500px;
+  margin: 16px auto;
+  background: white;
+  padding: 16px 0;
 
-  width: 50%;
-  margin: 0 auto 8px;
+  .field {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
 
-  label {
-    width: fit-content;
-    margin: 4px 0 0;
-  }
+    width: 50%;
+    margin: 0 auto 8px;
 
-  button {
-    width: 128px;
-    margin: 0 auto;
+    label {
+      width: fit-content;
+      margin: 4px 0 0;
+    }
+
+    button {
+      width: 128px;
+      margin: 0 auto;
+    }
   }
 }
 

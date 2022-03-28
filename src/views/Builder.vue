@@ -49,7 +49,8 @@
     </div>
   </div>
   <div class="footer">
-    <button class="save" @click="showModalFn">save</button>
+    <button v-if="logged" class="save" @click="showModalFn">save</button>
+    <div v-else>You need an account to save</div>
     <span>{{ message }}</span>
     <span class="error">{{ error }}</span>
     <small class="disclaimer">* Calculations are not guaranteed to be correct</small>
@@ -58,7 +59,7 @@
     <h2>Save current tool</h2>
     <div style="display: grid; margin: 8px 0">
       <label for="tool-name">Name</label>
-      <input autocomplete="false" name="tool-name" id="tool-name" type="text" v-model="toolName" />
+      <input autocomplete="false" name="tool-name" id="tool-name" type="text" v-model="toolName" required />
     </div>
     <label for="tool-description">Description</label>
     <textarea name="description" id="tool-description" cols="30" rows="10" v-model="toolDescription"></textarea>
@@ -75,7 +76,7 @@ import ItemStats from '@/components/ItemStats';
 import ItemRender from '@/components/ItemRender';
 import Modal from '@/components/Modal';
 import { Container, Draggable } from 'vue3-smooth-dnd';
-import { getApi, getPartsData, getToolLength } from '../utils';
+import { getApi, getPartsData, getToken, getToolLength } from '../utils';
 import axios from 'axios';
 
 export default {
@@ -157,6 +158,9 @@ export default {
     renderData() {
       return JSON.parse(JSON.stringify(this.parts));
     },
+    logged() {
+      return !!getToken()
+    }
   },
   watch: {
     toolType() {
@@ -171,12 +175,11 @@ export default {
 #tool-name {
   display: block;
   resize: none;
-  // font-size: 1.4em;
   font-family: 'Minecraft', Avenir, Helvetica, Arial, sans-serif;
 }
 
 .column {
-  background: #f0f0f0;
+  background: white;
   margin: 16px 0 0;
   padding: 0 8px;
 }

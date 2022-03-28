@@ -12,7 +12,6 @@
         <h3>{{ item.tool.name }}</h3>
         <div>"{{ item.tool.description }}"</div>
         <div>by {{ item.owner }}</div>
-        <!-- {{item}} -->
       </div>
     </div>
   </div>
@@ -119,6 +118,7 @@ h3 {
   padding: 4px;
   max-width: 950px;
   margin: auto;
+  // background: #fefefe;
 
   &:first-child {
     border-width: 0 0 1px;
