@@ -64,7 +64,7 @@ export default defineComponent({
     },
     pwError() {
       if (!this.passwordDirty) return '';
-      if (this.password.length < 3) return 'Password must be atleast 3 symbols!';
+      if (this.password.length < 6) return 'Password must be atleast 6 symbols!';
       return '';
     },
     pwWarning() {

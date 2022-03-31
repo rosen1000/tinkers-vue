@@ -8,7 +8,7 @@
     <span class="miningSpeed">Mining speed: {{ formatNumber(miningSpeed) }}</span>
     <div class="mods">
       <strong>Modifiers:</strong>
-      <span v-for="(times, trait) in traitsComputed" :key="trait" :class="trait">
+      <span v-for="(times, trait) in traitsComputed" :key="trait" :class="trait" :title="title(trait)">
         {{ formatString(trait) }} {{ toRoman(times) }}
       </span>
     </div>
@@ -32,6 +32,9 @@ export default {
     };
   },
   methods: {
+    title(trait) {
+      return this.partsData.traits[trait]
+    },
     reset() {
       this.durability = 0;
       this.damage = 1;

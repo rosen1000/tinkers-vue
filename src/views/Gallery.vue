@@ -11,7 +11,7 @@
       <div>
         <h3>{{ item.tool.name }}</h3>
         <div>"{{ item.tool.description }}"</div>
-        <div>by {{ item.owner }}</div>
+        <div>by {{ item.owner.name }}</div>
       </div>
     </div>
   </div>

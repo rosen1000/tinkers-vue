@@ -12,10 +12,12 @@
       <div>
         <h3>{{ item.tool.name }}</h3>
         <div>"{{ item.tool.description }}"</div>
-        <div>by {{ item.owner }}</div>
+        <div>by {{ item.owner.name }}</div>
+        <button class="remove-item" @click="remove(item.id)">Remove item</button>
       </div>
     </div>
   </div>
+  <div v-else>Nothing found :(</div>
   <div class="pages">
     <div class="page" @click="previous">&lt;</div>
     <div v-for="page of pages" :key="page" class="page" :class="page == currPage ? 'selected' : ''" @click="view(page)">
@@ -54,7 +56,7 @@ export default {
   methods: {
     logout() {
       localStorage.removeItem('token');
-      window.location = '/'
+      window.location = '/';
     },
     json(toolType, parts) {
       let tool = {};
@@ -79,7 +81,7 @@ export default {
       this.refresh();
     },
     refreshMeta() {
-      this.currPage = 1
+      this.currPage = 1;
       axios
         .get(
           getApi('tool-meta', {
@@ -95,7 +97,7 @@ export default {
         .get(
           getApi('tool', {
             type: this.toolType,
-            owner: this.token.sub,
+            owner: this.token.id,
             page: this.currPage,
           })
         )
@@ -104,6 +106,17 @@ export default {
     },
     formatString(text) {
       return (text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()).split('_').join(' ');
+    },
+    remove(id) {
+      axios
+        .delete(getApi('tool', { id }))
+        .then((res) => res.data)
+        .then((data) => {
+          if (data.error) return alert(data.error);
+
+          this.refreshMeta();
+          this.refresh();
+        });
     },
   },
   watch: {
@@ -118,6 +131,10 @@ export default {
 <style lang="scss" scoped>
 h3 {
   margin: 4px 0;
+}
+
+.remove-item {
+  margin: 8px 0 0;
 }
 
 .select-tool-type {
@@ -157,7 +174,6 @@ h3 {
   > div {
     width: 25%;
   }
-
 }
 
 .pages {
