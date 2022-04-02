@@ -11,8 +11,9 @@
       <item-stats :json="json(item.tool.type, item.tool.parts)" />
       <div>
         <h3>{{ item.tool.name }}</h3>
-        <div>"{{ item.tool.description }}"</div>
+        <div>"{{ item.tool.description || 'No description' }}"</div>
         <div>by {{ item.owner.name }}</div>
+        <button class="remove-item" @click="edit(item)">Edit</button>
         <button class="remove-item" @click="remove(item.id)">Remove item</button>
       </div>
     </div>
@@ -83,8 +84,8 @@ export default {
     refreshMeta() {
       this.currPage = 1;
       axios
-        .get(
-          getApi('tool-meta', {
+        .head(
+          getApi('tool', {
             type: this.toolType,
             owner: this.token.sub,
           })
@@ -118,6 +119,10 @@ export default {
           this.refresh();
         });
     },
+    edit(item) {
+      console.log(item);
+      this.$router.push(`/builder/${item.id}`)
+    }
   },
   watch: {
     toolType() {
@@ -134,7 +139,7 @@ h3 {
 }
 
 .remove-item {
-  margin: 8px 0 0;
+  margin: 8px 8px 0;
 }
 
 .select-tool-type {
