@@ -66,7 +66,7 @@ const isBroad = (item) => {
  * @returns query
  */
 const getApi = (path, params) => {
-  if (!params) return `http://127.0.0.1:8081/${path}`;
+  if (!params) return `${process.env.VUE_APP_API_ROUTE}/${path}`;
   return (
     `http://127.0.0.1:8081/${path}?` +
     Object.entries(params)
