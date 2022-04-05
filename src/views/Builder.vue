@@ -45,7 +45,7 @@
           to show stats</span
         >
       </span>
-      <item-render :toolType="toolType" :renderData="renderData" />
+      <item-render :toolType="toolType" :renderData="renderData" v-show="json.completed" />
     </div>
   </div>
   <div class="footer">
