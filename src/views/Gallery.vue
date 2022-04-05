@@ -10,7 +10,7 @@
       <item-stats :json="json(item.tool.type, item.tool.parts)" />
       <div>
         <h3>{{ item.tool.name }}</h3>
-        <div>"{{ item.tool.description }}"</div>
+        <div>"{{ item.tool.description || 'No description' }}"</div>
         <div>by {{ item.owner.name }}</div>
       </div>
     </div>
@@ -74,7 +74,7 @@ export default {
     refreshMeta() {
       this.currPage = 1
       axios
-        .get(getApi(`tool-meta${this.toolType == 'all' ? '' : `?type=${this.toolType}`}`))
+        .head(getApi(`tool${this.toolType == 'all' ? '' : `?type=${this.toolType}`}`))
         .then((res) => res.data)
         .then((data) => (this.pages = data.pages));
     },

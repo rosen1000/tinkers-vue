@@ -68,6 +68,7 @@
       <button @click="save">Save</button>
     </div>
   </modal>
+  {{ item }}
 </template>
 
 <script>
@@ -81,6 +82,7 @@ import axios from 'axios';
 
 export default {
   name: 'Builder',
+  props: ['item'],
   components: {
     Item,
     ItemStats,
@@ -107,6 +109,18 @@ export default {
       toolDescription: '',
     };
   },
+  async mounted() {
+    let id = this.$route.params.id;
+    if (id) {
+      let res = await axios.get(getApi('tool', { id }));
+      let data = res.data[0];
+      if (!data) return this.$router.push('/builder');
+      this.toolName = data.tool.name;
+      this.toolDescription = data.tool.description;
+      this.toolType = data.tool.type;
+      this.parts = data.tool.parts;
+    }
+  },
   methods: {
     onDrop({ removedIndex, addedIndex }) {
       let temp = this.items[removedIndex];
@@ -132,16 +146,21 @@ export default {
       this.showModal = true;
     },
     async save() {
-      let response = await axios.post(getApi('tool'), {
+      let response = await axios[this.$route.params.id ? 'patch' : 'post'](getApi('tool'), {
         ...this.json,
         name: this.toolName,
         description: this.toolDescription,
+        id: this.$route.params.id || undefined
       });
-      if (response.status == 401) this.error = '401 Unauthorized';
-      if (response.data.error) this.error = response.data.error;
+      if (response.status == 401) return this.error = '401 Unauthorized';
+      if (response.data.error) return this.error = response.data.error;
       this.error = '';
       this.message = response.data.message;
       this.showModal = false;
+      this.toolName = '';
+      this.toolDescription = '';
+      this.parts = {};
+      if (this.$route.params.id) this.$route.push('/builder');
     },
   },
   computed: {
@@ -159,8 +178,8 @@ export default {
       return JSON.parse(JSON.stringify(this.parts));
     },
     logged() {
-      return !!getToken()
-    }
+      return !!getToken();
+    },
   },
   watch: {
     toolType() {
