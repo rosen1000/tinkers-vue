@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const API_ROUTE = process.env.VUE_APP_API_ROUTE;
 
 function getImageSrc(toolType, part, material) {
   let fullPart = part.split('_')[1];
@@ -7,7 +8,7 @@ function getImageSrc(toolType, part, material) {
   try {
     if (!isNaN(numberedPart) && !isBroad(toolType)) {
       if (numberedPart == 1) return require(`../assets/textures/sword/guard_tconstruct_${material}.png`);
-      else return require(`../assets/textures/sword/handle_tconstruct_${material}.png`);
+      return require(`../assets/textures/sword/handle_tconstruct_${material}.png`);
     }
 
     if (toolType == 'mattock' && fullPart == 'axe')
@@ -66,13 +67,8 @@ const isBroad = (item) => {
  * @returns query
  */
 const getApi = (path, params) => {
-  if (!params) return `${process.env.VUE_APP_API_ROUTE}/${path}`;
-  return (
-    `http://127.0.0.1:8081/${path}?` +
-    Object.entries(params)
-      .map((e) => e.join('='))
-      .join('&')
-  );
+  if (!params) return `${API_ROUTE}/${path}`;
+  return `${API_ROUTE}/${path}?${new URLSearchParams(params).toString()}`;
 };
 
 /**
